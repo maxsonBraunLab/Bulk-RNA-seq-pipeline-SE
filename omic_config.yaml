@@ -3,21 +3,17 @@
 ##############################################################################
 
 # GTF file for the genome build you would like to use
-gtf_file: /home/groups/MaxsonLab/indices/mm10/STAR_index/Mus_musculus.GRCm39.104.gtf # mm10
-  # /home/groups/MaxsonLab/indices/GRch38/STAR_index/Homo_sapiens.GRCh38.104.gtf # hg38
+gtf_file: /home/groups/MaxsonLab/indices/GRch38/STAR_index/Homo_sapiens.GRCh38.104.gtf # hg38
 
 # Bed file for rseqc function read_distribution
-bed_file: data/mm10_MGC_gene.bed # mm10
+bed_file: data/hg38_Ens102_genes.txt # hg38
 
 # Pre-built STAR index
-star_index: /home/groups/MaxsonLab/indices/mm10/STAR_index # mm10
-  # /home/groups/MaxsonLab/indices/GRch38/STAR_index/ # hg38
+star_index: /home/groups/MaxsonLab/indices/GRch38/STAR_index/ # hg38
 
-filter_anno: anno/biomaRt/mm10.Ens_96.biomaRt.geneAnno.Rdata # mm10
-  # anno/biomaRt/hg38.Ens_94.biomaRt.geneAnno.Rdata # hg38
+filter_anno: anno/biomaRt/hg38.Ens_94.biomaRt.geneAnno.Rdata # hg38
 
-gene_names: data/mm10_Ens102_genes.txt # mm10
-  # data/hg38_Ens102_genes.txt # hg38
+gene_names: data/hg38_Ens102_genes.txt # hg38
 
 ####################################################################
 # Tool-specific files that will not change from project-to-project
@@ -40,14 +36,14 @@ omic_meta_data: data/metadata.tsv
 ##############################################################################################
 
 # Biotypes you would like to include in your gene counts table
-# Example: protein_coding,lincRNA,sRNA,rRNA,snRNA,snoRNA
+# Example: protein_coding | lincRNA | sRNA | rRNA | snRNA | snoRNA
 # if you want to keep all biotypes, use ""
 biotypes: protein_coding
 
-project_id: "my_project"
+project_id: "CET"
 
 # Genome assembly used for GO analysis, format must be as below, with the genome assembly first, and the version of ensembl second, separated by a period (Unless there is only one ensembl version, then just write assembly).
-assembly: mm10 # or hg38
+assembly: hg38 # or hg38
 
 # remove mito genes (1/0)
 mito: 1
@@ -60,8 +56,6 @@ FC: 2
 
 # FDR adjusted p-value cutoff for GO analysis and volcano plot
 adjp: 0.01
-
-seq_layout: PE
 
 # The column name of the characteristic you would like to do DE on. Example: Diagnosis, genotype, etc. This must be a column in your omic_meta_data.
 linear_model:

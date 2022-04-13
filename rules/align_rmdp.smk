@@ -81,7 +81,7 @@ rule bigwig:
         "../envs/deeptools.yaml"
     threads: 12
     shell:
-        "bamCoverage -b {input[0]} -o {output} -p {threads} --normalizeUsing CPM --binSize 10"
+        "bamCoverage -b {input[0]} -o {output} -p {threads} --normalizeUsing CPM --binSize 10 --smoothLength 50"
 
 rule star_statistics:
     input:

@@ -1,8 +1,8 @@
-![Snakemake](https://img.shields.io/badge/snakemake-≥5.2.1-brightgreen.svg)[![Build Status](https://travis-ci.com/ohsu-cedar-comp-hub/Bulk-RNA-seq-pipeline-PE.svg?branch=master)](https://travis-ci.com/ohsu-cedar-comp-hub/Bulk-RNA-seq-pipeline-PE)![Maintainer](https://img.shields.io/badge/maintainer-gartician-blue)[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
+![Snakemake](https://img.shields.io/badge/snakemake-≥5.2.1-brightgreen.svg)![Maintainer](https://img.shields.io/badge/maintainer-gartician-blue)[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
 
-# Bulk-RNA-seq-pipeline-PE
+# Bulk-RNA-seq-pipeline-SE
 
-Pipeline to run basic RNA-seq analysis on paired-end data.
+Pipeline to run basic RNA-seq analysis on single-end data.
 
 This is a package of Python and R scripts that enable reading, processing and analysis of Omics' datasets. 
 This package implements the Snakemake management workflow system and is currently implemented to work with 
@@ -35,18 +35,14 @@ Pipeline fixes / tailor to Maxson Data
 ```
 # clone this repo to a new working directory
 
-git clone git@github.com:maxsonBraunLab/Bulk-RNA-seq-pipeline-PE.git
-cd Bulk-RNA-seq-pipeline-PE/samples/raw
+git clone git@github.com:maxsonBraunLab/Bulk-RNA-seq-pipeline-SE.git
+cd Bulk-RNA-seq-pipeline-SE/samples/raw
 
 # symlink your FASTQ files (gzipped) to this directory
 for file in (find <absolute/path/to/relevant/folder> -name "*.gz" | sort); do
     echo "symlinking $file"
     ln -s $file .
 done
-
-# rename symlinks to match the following format: {sample}_{R1|R2}.fastq.gz
-mv sample1_1.fq.gz sample1_R1.fastq.gz
-mv sample1_2.fq.gz sample1_R2.fastq.gz
 
 ```
 
@@ -112,7 +108,7 @@ Detailed Workflow
 Alignment
 ======================
 1) Trimming
-    * Trimming of paired-end reads was performed using fastp.
+    * Trimming of single-end reads was performed using fastp.
 2) Quality Analysis
     * Trimmed reads were subject to `fastqc` quality analysis
     * The output is located in `samples/fastqc/{sample}/`
@@ -196,4 +192,5 @@ Differential Expression Analysis (DESeq2)
         * Volcano plots:
             * A `volcano plot` describing the distribution of up/downregulated genes in a given comparison
                 * Output is located in `results/diffexp`
+
 

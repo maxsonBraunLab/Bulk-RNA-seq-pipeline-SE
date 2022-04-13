@@ -1,47 +1,26 @@
 rule insertion_profile:
     input:
         "samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam"
-    params:
-        seq_layout=config['seq_layout'],
     output:
-        "rseqc/insertion_profile/{sample}/{sample}.insertion_profile.r",
-        "rseqc/insertion_profile/{sample}/{sample}.insertion_profile.R1.pdf",
-        "rseqc/insertion_profile/{sample}/{sample}.insertion_profile.R2.pdf",
-        "rseqc/insertion_profile/{sample}/{sample}.insertion_profile.xls",
+        "samples/rseqc/insertion_profile/{sample}.insertion_profile.r",
+        "samples/rseqc/insertion_profile/{sample}.insertion_profile.pdf",
+        "samples/rseqc/insertion_profile/{sample}.insertion_profile.xls",
     conda:
         "../envs/rseqc.yaml"
     shell:
-        "insertion_profile.py -s '{params.seq_layout}' -i {input} -o rseqc/insertion_profile/{wildcards.sample}/{wildcards.sample}"
-
-rule inner_distance:
-    input:
-        "samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam"
-    params:
-        bed=config['bed_file']
-    output:
-        "rseqc/inner_distance/{sample}/{sample}.inner_distance.txt",
-        "rseqc/inner_distance/{sample}/{sample}.inner_distance_plot.r",
-        "rseqc/inner_distance/{sample}/{sample}.inner_distance_plot.pdf",
-        "rseqc/inner_distance/{sample}/{sample}.inner_distance_freq.txt",
-    conda:
-        "../envs/rseqc.yaml"
-    shell:
-        "inner_distance.py -i {input} -o rseqc/inner_distance/{wildcards.sample}/{wildcards.sample} -r {params.bed}"
+        "insertion_profile.py -i {input} -o samples/rseqc/insertion_profile/{wildcards.sample} -s 'SE'"
 
 rule clipping_profile:
     input:
         "samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam"
-    params:
-        seq_layout=config['seq_layout'],
     output:
-        "rseqc/clipping_profile/{sample}/{sample}.clipping_profile.r",
-        "rseqc/clipping_profile/{sample}/{sample}.clipping_profile.R1.pdf",
-        "rseqc/clipping_profile/{sample}/{sample}.clipping_profile.R2.pdf",
-        "rseqc/clipping_profile/{sample}/{sample}.clipping_profile.xls",
+        "samples/rseqc/clipping_profile/{sample}.clipping_profile.r",
+        "samples/rseqc/clipping_profile/{sample}.clipping_profile.pdf",
+        "samples/rseqc/clipping_profile/{sample}.clipping_profile.xls",
     conda:
         "../envs/rseqc.yaml"
     shell:
-        "clipping_profile.py -i {input} -s '{params.seq_layout}' -o rseqc/clipping_profile/{wildcards.sample}/{wildcards.sample}"
+        "clipping_profile.py -i {input} -s 'SE' -o samples/rseqc/clipping_profile/{wildcards.sample}"
 
 rule read_distribution:
     input:
@@ -49,7 +28,7 @@ rule read_distribution:
     params:
         bed=config['bed_file']
     output:
-        "rseqc/read_distribution/{sample}/{sample}.read_distribution.txt",
+        "samples/rseqc/read_distribution/{sample}.read_distribution.txt",
     conda:
         "../envs/rseqc.yaml"
     shell:
@@ -59,25 +38,26 @@ rule read_GC:
     input:
         "samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam"
     output:
-        "rseqc/read_GC/{sample}/{sample}.GC.xls",
-        "rseqc/read_GC/{sample}/{sample}.GC_plot.r",
-        "rseqc/read_GC/{sample}/{sample}.GC_plot.pdf",
+        "samples/rseqc/read_GC/{sample}.GC.xls",
+        "samples/rseqc/read_GC/{sample}.GC_plot.r",
+        "samples/rseqc/read_GC/{sample}.GC_plot.pdf",
     conda:
         "../envs/rseqc.yaml"
     shell:
-        "read_GC.py -i {input} -o rseqc/read_GC/{wildcards.sample}/{wildcards.sample}"
+        "read_GC.py -i {input} -o samples/rseqc/read_GC/{wildcards.sample}"
 
 rule multiqc:
     input:
+        expand("samples/fastp/{sample}.fastq.gz", sample = SAMPLES),
+        expand("samples/fastqscreen/{sample}_screen.txt", sample = SAMPLES),
+        expand("samples/fastqc/{sample}_fastqc.zip", sample = SAMPLES),
         expand("samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam", sample = SAMPLES),
-        expand("rseqc/read_distribution/{sample}/{sample}.read_distribution.txt", sample = SAMPLES),
-        expand("rseqc/read_GC/{sample}/{sample}.GC.xls", sample = SAMPLES),
-        expand("rseqc/insertion_profile/{sample}/{sample}.insertion_profile.xls", sample = SAMPLES),
-        expand("rseqc/inner_distance/{sample}/{sample}.inner_distance_freq.txt", sample = SAMPLES),
-        expand("rseqc/clipping_profile/{sample}/{sample}.clipping_profile.xls", sample = SAMPLES)
+        expand("samples/rseqc/insertion_profile/{sample}.insertion_profile.xls", sample = SAMPLES),
+        expand("samples/rseqc/clipping_profile/{sample}.clipping_profile.xls", sample = SAMPLES),
+        expand("samples/rseqc/read_GC/{sample}.GC.xls", sample = SAMPLES)
     output:
         "results/multiqc_report/multiqc_report.html"
     conda:
         "../envs/multiqc.yaml"
     shell:
-        "multiqc logs/ samples/ -f -o results/multiqc_report"
+        "multiqc samples/ -f -o results/multiqc_report"
