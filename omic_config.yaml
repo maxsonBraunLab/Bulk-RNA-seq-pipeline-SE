@@ -1,0 +1,107 @@
+##############################################################################
+# Genome and project-specific files that will change from project-to-project
+##############################################################################
+
+# GTF file for the genome build you would like to use
+gtf_file: /home/groups/MaxsonLab/indices/mm10/STAR_index/Mus_musculus.GRCm39.104.gtf # mm10
+  # /home/groups/MaxsonLab/indices/GRch38/STAR_index/Homo_sapiens.GRCh38.104.gtf # hg38
+
+# Bed file for rseqc function read_distribution
+bed_file: data/mm10_MGC_gene.bed # mm10
+
+# Pre-built STAR index
+star_index: /home/groups/MaxsonLab/indices/mm10/STAR_index # mm10
+  # /home/groups/MaxsonLab/indices/GRch38/STAR_index/ # hg38
+
+filter_anno: anno/biomaRt/mm10.Ens_96.biomaRt.geneAnno.Rdata # mm10
+  # anno/biomaRt/hg38.Ens_94.biomaRt.geneAnno.Rdata # hg38
+
+gene_names: data/mm10_Ens102_genes.txt # mm10
+  # data/hg38_Ens102_genes.txt # hg38
+
+####################################################################
+# Tool-specific files that will not change from project-to-project
+####################################################################
+
+# Fasta file including Illumina adapters to be trimmed out via bbduk
+bb_adapter: data/adapters.fa
+# Pre-built genome indexes for various organisms which we will screen against to look for contamination
+conf: data/fastq_screen.conf
+
+##########################################
+# Important project-specific paths/files
+##########################################
+
+# Metadata needed for differential expression analysis. tab delimited file
+omic_meta_data: data/metadata.tsv
+
+##############################################################################################
+# Project-specific specifications you will need to make prior to submission of the pipeline
+##############################################################################################
+
+# Biotypes you would like to include in your gene counts table
+# Example: protein_coding,lincRNA,sRNA,rRNA,snRNA,snoRNA
+# if you want to keep all biotypes, use ""
+biotypes: protein_coding
+
+project_id: "my_project"
+
+# Genome assembly used for GO analysis, format must be as below, with the genome assembly first, and the version of ensembl second, separated by a period (Unless there is only one ensembl version, then just write assembly).
+assembly: mm10 # or hg38
+
+# remove mito genes (1/0)
+mito: 1
+
+# option to print GO term tree (0/1)
+printTree: 1
+
+# fold change cutoff (not log2 transformed) for GO analysis and volcano pot
+FC: 2
+
+# FDR adjusted p-value cutoff for GO analysis and volcano plot
+adjp: 0.01
+
+seq_layout: PE
+
+# The column name of the characteristic you would like to do DE on. Example: Diagnosis, genotype, etc. This must be a column in your omic_meta_data.
+linear_model:
+  #Column name in meta data file to generate contrasts by
+  Condition
+
+# The column name in which your sampleIDs are defined in omic_meta_data. These should match the sampleIDs in your fastq files.
+sample_id:
+  #Column name listing unique sample ids to be used. This needs to be the first column in the meta data file
+  SampleID
+
+# The column names in your omic_meta_data file which you would like to annotate your heatmaps by. This is used as a QC to look for batch effects. Enter columns which could potentially introduce a batch effect in your data.
+meta_columns_to_plot:
+  Condition: Condition
+
+pca:
+  labels:
+    #Column name in meta data file to generate group files and comparisons
+    - Condition
+
+# Define contrasts as target-vs-baseline, such as mutatn-vs-wildtype.
+# This format is completely different from the original scheme written by JEstabrook.
+# This format will have better compatibility with the maxsonBraunLab/atac_seq pipeline to facilitate easier data interpretation.
+diffexp:
+  # contrasts to generate group files and perform comparisons
+  contrasts:
+    # - target-vs-baseline
+  # This option is specified if you would like to run DESeq2 on a subset of your samples (> pairwise comparison)
+  LRT:
+    - condition1
+    - condition2
+    - baseline
+
+# If you would like to colour your QC plots by an RColorBrewer palette, list that palette under the rcolorbrewer parameter, otherwise, write "NA"
+# If you would like to colour your QC plots by specific colours, please list them under the discrete category, with one colour for each bullet point
+## The discrete colours will be assigned to your Conditions (ie. linear_model) in the order that they show up in your metadata table, when it is ordered alphabetically by sample ID
+## There must be the same number of colours listed as there are Conditions
+# If no options are specified, the default ggplot2 colours are used
+colors:
+  rcolorbrewer:
+    - NA
+  discrete:
+    - NA

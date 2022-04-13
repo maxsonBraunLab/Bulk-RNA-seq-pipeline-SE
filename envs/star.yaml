@@ -1,0 +1,7 @@
+name: star
+channels:
+  - bioconda
+  - anaconda
+  - defaults
+dependencies:
+  - star=2.7.1a
