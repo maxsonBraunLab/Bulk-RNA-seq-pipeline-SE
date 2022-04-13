@@ -1,56 +1,45 @@
 rule fastp:
     input:
-        fwd = "samples/raw/{sample}_R1.fastq.gz",
-        rev = "samples/raw/{sample}_R2.fastq.gz"
+        "samples/raw/{sample}.fastq.gz"
     output:
-        fwd = "samples/fastp/{sample}_R1.fastq.gz",
-        rev = "samples/fastp/{sample}_R2.fastq.gz"
+        "samples/fastp/{sample}.fastq.gz"
     conda:
         "../envs/fastp.yaml"
     log:
         "logs/fastp/{sample}.fastp.json"
     threads: 8
     shell:
-        "fastp -i {input.fwd} -I {input.rev} -o {output.fwd} -O {output.rev} "
-        "--detect_adapter_for_pe --thread {threads} -j {log} -h /dev/null"
+        "fastp -i {input} -o {output} --thread {threads} -j {log} -h /dev/null"
 
 rule fastqscreen:
     input:
-        fwd = "samples/fastp/{sample}_R1.fastq.gz",
-        rev = "samples/fastp/{sample}_R2.fastq.gz"
+        "samples/fastp/{sample}.fastq.gz"
     output:
-        "samples/fastqscreen/{sample}/{sample}_R1_screen.html",
-        "samples/fastqscreen/{sample}/{sample}_R1_screen.png",
-        "samples/fastqscreen/{sample}/{sample}_R1_screen.txt",
-        "samples/fastqscreen/{sample}/{sample}_R2_screen.html",
-        "samples/fastqscreen/{sample}/{sample}_R2_screen.png",
-        "samples/fastqscreen/{sample}/{sample}_R2_screen.txt"
+        "samples/fastqscreen/{sample}/{sample}_screen.html",
+        "samples/fastqscreen/{sample}/{sample}_screen.png",
+        "samples/fastqscreen/{sample}/{sample}_screen.txt"
     params:
         conf = config["conf"]
     conda:
         "../envs/fastqscreen.yaml"
     shell:
-        """fastq_screen --aligner bowtie2 --conf {params.conf} --outdir samples/fastqscreen/{wildcards.sample} {input.fwd} {input.rev}"""
-
+        "fastq_screen --aligner bowtie2 --conf {params.conf} --outdir samples/fastqscreen/{wildcards.sample} {input}"
 
 rule fastqc:
     input:
-        fwd = "samples/fastp/{sample}_R1.fastq.gz",
-        rev = "samples/fastp/{sample}_R2.fastq.gz"
+        "samples/fastp/{sample}.fastq.gz"
     output:
-        fwd = "samples/fastqc/{sample}/{sample}_R1_fastqc.zip",
-        rev = "samples/fastqc/{sample}/{sample}_R2_fastqc.zip"
+        "samples/fastqc/{sample}/{sample}_fastqc.zip"
     conda:
         "../envs/fastqc.yaml"
     message:
-        """--- Quality check of raw data with Fastqc."""
+        "--- Quality check of raw data with Fastqc."
     shell:
-        """fastqc --outdir samples/fastqc/{wildcards.sample} --extract  -f fastq {input.fwd} {input.rev}"""
+        "fastqc --outdir samples/fastqc/{wildcards.sample} --extract -f fastq {input}"
 
 rule STAR:
     input:
-        fwd = "samples/fastp/{sample}_R1.fastq.gz",
-        rev = "samples/fastp/{sample}_R2.fastq.gz"
+        "samples/fastp/{sample}.fastq.gz"
     output:
         "samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam",
         "samples/star/{sample}_bam/ReadsPerGene.out.tab",
@@ -63,7 +52,7 @@ rule STAR:
         "../envs/star.yaml"
     shell:
         "STAR --runThreadN {threads} --runMode alignReads --genomeDir {params.genome_index} \
-        --readFilesIn {input.fwd} {input.rev} \
+        --readFilesIn {input} \
         --outFileNamePrefix samples/star/{wildcards.sample}_bam/ \
         --sjdbGTFfile {params.gtf} --quantMode GeneCounts \
         --sjdbGTFtagExonParentGene gene_name \
@@ -80,7 +69,7 @@ rule index:
     conda:
         "../envs/samtools_env.yaml"
     shell:
-        """samtools index {input} {output}"""
+        "samtools index {input} {output}"
 
 rule bigwig:
     input:
@@ -101,7 +90,6 @@ rule star_statistics:
         "results/tables/{project_id}_STAR_mapping_statistics.txt".format(project_id = config["project_id"])
     script:
         "../scripts/compile_star_log.py"
-
 
 rule compile_star_counts:
     input:
@@ -124,13 +112,3 @@ rule filter_counts:
         mito=config['mito']
     script:
         "../scripts/RNAseq_filterCounts.R"
-
-rule multiqc:
-    input:
-        expand("samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam", sample = SAMPLES)
-    output:
-        "results/multiqc_report/multiqc_report.html"
-    conda:
-        "../envs/multiqc.yaml"
-    shell:
-        "multiqc logs/ samples/ -f -o results/multiqc_report"

@@ -67,3 +67,17 @@ rule read_GC:
     shell:
         "read_GC.py -i {input} -o rseqc/read_GC/{wildcards.sample}/{wildcards.sample}"
 
+rule multiqc:
+    input:
+        expand("samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam", sample = SAMPLES),
+        expand("rseqc/read_distribution/{sample}/{sample}.read_distribution.txt", sample = SAMPLES),
+        expand("rseqc/read_GC/{sample}/{sample}.GC.xls", sample = SAMPLES),
+        expand("rseqc/insertion_profile/{sample}/{sample}.insertion_profile.xls", sample = SAMPLES),
+        expand("rseqc/inner_distance/{sample}/{sample}.inner_distance_freq.txt", sample = SAMPLES),
+        expand("rseqc/clipping_profile/{sample}/{sample}.clipping_profile.xls", sample = SAMPLES)
+    output:
+        "results/multiqc_report/multiqc_report.html"
+    conda:
+        "../envs/multiqc.yaml"
+    shell:
+        "multiqc logs/ samples/ -f -o results/multiqc_report"
