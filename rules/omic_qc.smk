@@ -49,11 +49,12 @@ rule read_GC:
 rule multiqc:
     input:
         expand("samples/fastp/{sample}.fastq.gz", sample = SAMPLES),
-        expand("samples/fastqscreen/{sample}_screen.txt", sample = SAMPLES),
-        expand("samples/fastqc/{sample}_fastqc.zip", sample = SAMPLES),
+        expand("samples/fastqscreen/{sample}/{sample}_screen.txt", sample = SAMPLES),
+        expand("samples/fastqc/{sample}/{sample}_fastqc.zip", sample = SAMPLES),
         expand("samples/star/{sample}_bam/Aligned.sortedByCoord.out.bam", sample = SAMPLES),
         expand("samples/rseqc/insertion_profile/{sample}.insertion_profile.xls", sample = SAMPLES),
         expand("samples/rseqc/clipping_profile/{sample}.clipping_profile.xls", sample = SAMPLES),
+        expand("samples/rseqc/read_distribution/{sample}.read_distribution.txt", sample = SAMPLES),
         expand("samples/rseqc/read_GC/{sample}.GC.xls", sample = SAMPLES)
     output:
         "results/multiqc_report/multiqc_report.html"

@@ -3,24 +3,27 @@
 ##############################################################################
 
 # GTF file for the genome build you would like to use
-gtf_file: /home/groups/MaxsonLab/indices/GRch38/STAR_index/Homo_sapiens.GRCh38.104.gtf # hg38
+gtf_file: /home/groups/MaxsonLab/indices/mm10/STAR_index/Mus_musculus.GRCm39.104.gtf # mm10
+  # /home/groups/MaxsonLab/indices/GRch38/STAR_index/Homo_sapiens.GRCh38.104.gtf # hg38
 
 # Bed file for rseqc function read_distribution
-bed_file: data/hg38_Ens102_genes.txt # hg38
+bed_file: data/mm10_GENCODE_vm25.bed # mm10
+  # data/hg38_GENCODE.v38.bed # hg38
 
 # Pre-built STAR index
-star_index: /home/groups/MaxsonLab/indices/GRch38/STAR_index/ # hg38
+star_index: /home/groups/MaxsonLab/indices/mm10/STAR_index # mm10
+  # /home/groups/MaxsonLab/indices/GRch38/STAR_index/ # hg38
 
-filter_anno: anno/biomaRt/hg38.Ens_94.biomaRt.geneAnno.Rdata # hg38
+filter_anno: anno/biomaRt/mm10.Ens_96.biomaRt.geneAnno.Rdata # mm10
+  # anno/biomaRt/hg38.Ens_94.biomaRt.geneAnno.Rdata # hg38
 
-gene_names: data/hg38_Ens102_genes.txt # hg38
+gene_names: data/mm10_Ens102_genes.txt # mm10
+  # data/hg38_Ens102_genes.txt # hg38
 
 ####################################################################
 # Tool-specific files that will not change from project-to-project
 ####################################################################
 
-# Fasta file including Illumina adapters to be trimmed out via bbduk
-bb_adapter: data/adapters.fa
 # Pre-built genome indexes for various organisms which we will screen against to look for contamination
 conf: data/fastq_screen.conf
 
@@ -40,10 +43,10 @@ omic_meta_data: data/metadata.tsv
 # if you want to keep all biotypes, use ""
 biotypes: protein_coding
 
-project_id: "CET"
+project_id: "my_project"
 
 # Genome assembly used for GO analysis, format must be as below, with the genome assembly first, and the version of ensembl second, separated by a period (Unless there is only one ensembl version, then just write assembly).
-assembly: hg38 # or hg38
+assembly: mm10 # [hg38, mm10]
 
 # remove mito genes (1/0)
 mito: 1

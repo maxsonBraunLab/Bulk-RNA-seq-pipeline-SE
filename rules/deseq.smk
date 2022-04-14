@@ -17,7 +17,6 @@ rule deseq2_init:
     script:
         "../scripts/deseq2-init.R"
 
-
 # output log2-transformed DESeq2-normalized counts table.
 rule deseq2_norm:
     input:
@@ -33,7 +32,6 @@ rule deseq2_norm:
         "../envs/deseq2.yaml"
     script:
         "../scripts/deseq2_norm.R"
-
 
 rule deseq2_pairwise:
     input:
@@ -59,7 +57,6 @@ rule deseq2_pairwise:
     script:
         "../scripts/deseq2_pairwise.R"
 
-
 rule deseq2_group:
     input:
         counts = "data/{project_id}_counts.filt.txt".format(project_id = project_id)
@@ -82,7 +79,6 @@ rule deseq2_group:
         "../envs/deseq2.yaml"
     script:
         "../scripts/deseq2_group.R"
-
 
 rule deseq2_QC:
     input:
@@ -107,7 +103,6 @@ rule deseq2_QC:
     script:
         "../scripts/QC.R"
 
-
 rule deseq2_qplot:
     input:
         stats_table="results/diffexp/pairwise/{contrast}.diffexp.tsv",
@@ -121,7 +116,6 @@ rule deseq2_qplot:
         "../envs/qplot_env.yaml"
     script:
         "../scripts/qplot.R"
-
 
 rule deseq2_density:
     input:
@@ -137,7 +131,6 @@ rule deseq2_density:
         "../envs/deseq2.yaml"
     script:
         "../scripts/density_plot.R"
-
 
 rule GO:
     input:
@@ -156,7 +149,6 @@ rule GO:
     script:
         "../scripts/runGOforDESeq2.R"
 
-
 rule volcano:
     input:
         degFile="results/diffexp/pairwise/{contrast}.diffexp.tsv"
@@ -170,7 +162,6 @@ rule volcano:
         "../envs/deseq2.yaml"
     script:
         "../scripts/RNAseq_makeVolcano.R"
-
 
 rule permutation:
     input:
@@ -189,7 +180,6 @@ rule permutation:
     script:
         "../scripts/permutation_test.R"
 
-
 rule run_glimma:
     input:
         rds="results/diffexp/pairwise/{contrast}_all.rds"
@@ -203,7 +193,6 @@ rule run_glimma:
         "../envs/glimma_env.yaml"
     script:
         "../scripts/run_glimma.R"
-
 
 rule run_glimma_mds:
     input:

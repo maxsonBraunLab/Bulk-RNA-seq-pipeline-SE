@@ -26,20 +26,8 @@ if(grepl('txt$|tsv$',degFile)){
 
 ##---------load correct Biomart------------------------#
 print(getwd())
-if (assembly == "hg19") {
+if (assembly == "hg38") {
     organismStr <- "hsapiens"
-    geneID2GO <- get(load("./anno/biomaRt/hg19.Ens_75.biomaRt.GO.external.geneID2GO.RData"))
-    xx <- get(load("./anno/biomaRt/GO.db.Term.list.rda"))
-}
-if (assembly == "hg38.89") {
-    organismStr <- "hsapiens"
-    ### to get to hg38 mappings ensembl 89!
-    geneID2GO <- get(load("./anno/biomaRt/hg38.Ens_89.biomaRt.GO.external.geneID2GO.RData"))
-    xx <- get(load("./anno/biomaRt/GO.db.Term.list.rda"))
-}
-if (assembly == "hg38.90") {
-    organismStr <- "hsapiens"
-    ### to get to hg38 mappings ensembl 90!
     geneID2GO <- get(load("./anno/biomaRt/hg38.Ens_90.biomaRt.GO.external.geneID2GO.RData"))
     xx <- get(load("./anno/biomaRt/GO.db.Term.list.rda"))
 }

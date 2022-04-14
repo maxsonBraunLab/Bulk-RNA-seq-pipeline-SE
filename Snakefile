@@ -75,19 +75,19 @@ rule all:
         "results/multiqc_report/multiqc_report.html",
         "data/{project_id}_counts.filt.txt".format(project_id=config["project_id"]),
         "results/multiqc_report/multiqc_report.html",
-        # DESeq2 group ----------------------------------------------------------------------------
-        # "data/{project_id}_norm.txt".format(project_id = config["project_id"]),
-        # "data/{project_id}_log2norm.txt".format(project_id = config["project_id"]),
-        # "results/diffexp/group/LRT_pca.pdf",
-        # "results/diffexp/group/MDS_table.txt",
-        # "results/diffexp/group/LRT_density_plot.pdf",
-        # expand(["results/diffexp/glimma-plots/{contrast}.ma_plot.html", "results/diffexp/glimma-plots/{contrast}.volcano_plot.html"],contrast = config["diffexp"]["contrasts"]),
-        # "results/diffexp/glimma-plots/{project_id}.mds_plot.html".format(project_id=project_id),
-        # DESeq2 pairwise -------------------------------------------------------------------------
-        # expand("results/diffexp/pairwise/{contrast}.pca_plot.pdf", contrast = config["diffexp"]["contrasts"]),
-        # expand(["results/diffexp/pairwise/{contrast}.qplot.pdf","results/diffexp/pairwise/{contrast}.qhist.pdf","results/diffexp/pairwise/{contrast}.qvalue_diffexp.tsv"],contrast=config["diffexp"]["contrasts"]),
-        # expand(["results/diffexp/pairwise/GOterms/{contrast}.diffexp.downFC.{FC}.adjp.{adjp}_BP_GO.txt", "results/diffexp/pairwise/GOterms/{contrast}.diffexp.upFC.{FC}.adjp.{adjp}_BP_GO.txt"], contrast = config["diffexp"]["contrasts"], FC=config['FC'], adjp=config['adjp']),
-        # expand("results/diffexp/pairwise/{contrast}.diffexp.{adjp}.VolcanoPlot.pdf", contrast = config["diffexp"]["contrasts"], adjp = config['adjp']),
+
+        # DESeq2 ----------------------------------------------------------------------------------
+        "data/{project_id}_norm.txt".format(project_id=config["project_id"]),
+        "results/diffexp/group/MDS_plot.pdf",
+
+        # group analysis
+        "results/diffexp/group/LRT_pca.pdf",
+
+        # pairwise analysis
+        expand("results/diffexp/pairwise/{contrast}.pca_plot.pdf", contrast = config["diffexp"]["contrasts"]),
+        expand("results/diffexp/pairwise/{contrast}.qplot.pdf", contrast = config["diffexp"]["contrasts"]),
+        expand("results/diffexp/pairwise/{{contrast}}.diffexp.{adjp}.VolcanoPlot.pdf".format(adjp=config["adjp"]), contrast = config["diffexp"]["contrasts"]),
+        expand("results/diffexp/pairwise/GOterms/{{contrast}}.diffexp.downFC.{FC}.adjp.{adjp}_BP_GO.txt".format(FC = config["FC"],adjp=config["adjp"]), contrast = config["diffexp"]["contrasts"])
 
 include: "rules/align_rmdp.smk"
 include: "rules/omic_qc.smk"
