@@ -28,28 +28,6 @@ inner_distance_ext = ['_freq.txt','_plot.pdf','_plot.r','.txt']
 read_dist_ext = ['txt']
 read_gc_ext = ['.xls','_plot.r','_plot.pdf']
 
-
-with open('cluster.json') as json_file:
-    json_dict = json.load(json_file)
-
-rule_dirs = list(json_dict.keys())
-rule_dirs.pop(rule_dirs.index('__default__'))
-
-
-for rule in rule_dirs:
-    if not os.path.exists(os.path.join(os.getcwd(),'logs',rule)):
-        log_out = os.path.join(os.getcwd(), 'logs', rule)
-        os.makedirs(log_out)
-        print(log_out)
-
-result_dirs = ['diffexp','tables']
-for rule in result_dirs:
-    if not os.path.exists(os.path.join(os.getcwd(),'results',rule)):
-        log_out = os.path.join(os.getcwd(), 'results', rule)
-        os.makedirs(log_out)
-        print(log_out)
-
-
 def message(mes):
     sys.stderr.write("|--- " + mes + "\n")
 
@@ -92,3 +70,4 @@ rule all:
 include: "rules/align_rmdp.smk"
 include: "rules/omic_qc.smk"
 include: "rules/deseq.smk"
+
