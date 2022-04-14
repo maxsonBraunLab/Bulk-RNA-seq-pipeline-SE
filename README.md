@@ -46,6 +46,8 @@ done
 
 ```
 
+Please make sure to match your file to the following format: `{sample}.fastq.gz` where the term `sample` can contain alphanumerical characters.
+
 # 2. Prepare your conda environment
 
 Continue forward if you don't have a conda environment with a clean install of snakemake.
@@ -192,5 +194,6 @@ Differential Expression Analysis (DESeq2)
         * Volcano plots:
             * A `volcano plot` describing the distribution of up/downregulated genes in a given comparison
                 * Output is located in `results/diffexp`
+
 
 
