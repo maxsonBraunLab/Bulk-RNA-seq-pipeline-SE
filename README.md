@@ -82,7 +82,7 @@ First do a dry-run of snakemake to ensure proper execution before submitting it 
 $ snakemake -np --verbose
 ```
 
-Once your files are symbolically linked, you can submit the jobs batch-style to exacloud via your terminal window. This is most appropriate when running many heavy processes like read alignment.
+Once your files are symbolically linked, you can submit the jobs batch-style to ARC (formerly Exacloud) via your terminal window. This is most appropriate when running many heavy processes like read alignment.
 
 ```
 $ snakemake -j <n jobs> --use-conda --profile slurm --cluster-config cluster.yaml
